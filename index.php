@@ -103,7 +103,7 @@ $posts = $stmt->fetchAll();
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 <?php echo SITE_NAME; ?>. All rights reserved.</p>
+            <p>&copy; 2025 CodeReviewBoard <?php echo SITE_NAME; ?>. All rights reserved.</p>
         </div>
     </footer>
 </body>
