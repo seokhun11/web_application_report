@@ -30,7 +30,6 @@ if (!$post) {
 $isOwner = isset($_SESSION['my_posts']) && in_array($id, $_SESSION['my_posts']);
 
 if (!$isOwner) {
-    // 권한이 없으면 게시글 보기 페이지로 리다이렉트
     header('Location: view.php?id=' . $id);
     exit;
 }
@@ -77,95 +76,56 @@ $languages = [
     'kotlin' => 'Kotlin',
     'swift' => 'Swift'
 ];
+
+$pageTitle = '게시글 수정 - ' . SITE_NAME;
+require_once 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="ko">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 수정 - <?php echo SITE_NAME; ?></title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<h1 class="page-title">게시글 수정</h1>
 
-<body>
-    <header>
-        <div class="container">
-            <a href="index.php" class="logo"><?php echo SITE_NAME; ?></a>
-            <nav>
-                <ul>
-                    <li><a href="index.php">홈</a></li>
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        <li><a href="write.php">글 작성</a></li>
-                        <li><span style="color: #000; font-weight: 600;">👤
-                                <?php echo htmlspecialchars($_SESSION['username']); ?></span></li>
-                        <li><a href="logout.php">로그아웃</a></li>
-                    <?php else: ?>
-                        <li><a href="login.php">로그인</a></li>
-                        <li><a href="register.php">회원가입</a></li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
+<?php if ($error): ?>
+    <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
+<?php endif; ?>
+
+<div class="card">
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="title">제목 *</label>
+            <input type="text" id="title" name="title" class="form-control" placeholder="게시글 제목을 입력하세요" required
+                value="<?php echo htmlspecialchars($_POST['title'] ?? $post['title']); ?>">
         </div>
-    </header>
 
-    <main>
-        <div class="container">
-            <h1 class="page-title">✏️ 게시글 수정</h1>
-
-            <?php if ($error): ?>
-                <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
-            <?php endif; ?>
-
-            <div class="card">
-                <form method="POST" action="">
-                    <div class="form-group">
-                        <label for="title">제목 *</label>
-                        <input type="text" id="title" name="title" class="form-control" placeholder="게시글 제목을 입력하세요"
-                            required value="<?php echo htmlspecialchars($_POST['title'] ?? $post['title']); ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="programming_language">프로그래밍 언어</label>
-                        <select id="programming_language" name="programming_language" class="form-control">
-                            <?php foreach ($languages as $value => $label): ?>
-                                <option value="<?php echo $value; ?>" <?php
-                                   $selected = $_POST['programming_language'] ?? $post['programming_language'];
-                                   echo ($selected === $value) ? 'selected' : '';
-                                   ?>>
-                                    <?php echo $label; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="content">내용 *</label>
-                        <textarea id="content" name="content" class="form-control" placeholder="리뷰 받고 싶은 내용을 상세히 설명해주세요"
-                            required><?php echo htmlspecialchars($_POST['content'] ?? $post['content']); ?></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="code_content">코드 (선택사항)</label>
-                        <textarea id="code_content" name="code_content" class="form-control"
-                            style="font-family: 'IntelOneMonoItalic', 'Consolas', monospace; min-height: 200px;"
-                            placeholder="리뷰 받고 싶은 코드를 붙여넣으세요"><?php echo htmlspecialchars($_POST['code_content'] ?? $post['code_content']); ?></textarea>
-                    </div>
-
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-primary">💾 수정 완료</button>
-                        <a href="view.php?id=<?php echo $id; ?>" class="btn btn-secondary">취소</a>
-                    </div>
-                </form>
-            </div>
+        <div class="form-group">
+            <label for="programming_language">프로그래밍 언어</label>
+            <select id="programming_language" name="programming_language" class="form-control">
+                <?php foreach ($languages as $value => $label): ?>
+                    <option value="<?php echo $value; ?>" <?php
+                       $selected = $_POST['programming_language'] ?? $post['programming_language'];
+                       echo ($selected === $value) ? 'selected' : '';
+                       ?>>
+                        <?php echo $label; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
-    </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 <?php echo SITE_NAME; ?>. All rights reserved.</p>
+        <div class="form-group">
+            <label for="content">내용 *</label>
+            <textarea id="content" name="content" class="form-control" placeholder="리뷰 받고 싶은 내용을 상세히 설명해주세요"
+                required><?php echo htmlspecialchars($_POST['content'] ?? $post['content']); ?></textarea>
         </div>
-    </footer>
-</body>
 
-</html>
+        <div class="form-group">
+            <label for="code_content">코드 (선택사항)</label>
+            <textarea id="code_content" name="code_content" class="form-control code-input"
+                placeholder="리뷰 받고 싶은 코드를 붙여넣으세요"><?php echo htmlspecialchars($_POST['code_content'] ?? $post['code_content']); ?></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">수정 완료</button>
+            <a href="view.php?id=<?php echo $id; ?>" class="btn btn-secondary">취소</a>
+        </div>
+    </form>
+</div>
+
+<?php require_once 'includes/footer.php'; ?>

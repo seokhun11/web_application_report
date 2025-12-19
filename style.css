@@ -250,6 +250,12 @@ select.form-control {
     cursor: pointer;
 }
 
+/* 코드 입력 textarea */
+.code-input {
+    font-family: 'IntelOneMonoItalic', 'Consolas', 'Monaco', monospace !important;
+    min-height: 200px;
+}
+
 /* 코드 블록 */
 .code-block {
     background: var(--code-bg);

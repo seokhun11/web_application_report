@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $password_confirm = $_POST['password_confirm'] ?? '';
 
-    // 유효성 검사
     if (empty($username) || empty($email) || empty($password)) {
         $error = '모든 필드를 입력해주세요.';
     } elseif (strlen($username) < 2 || strlen($username) > 50) {
@@ -34,13 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $pdo = getDBConnection();
 
-            // 중복 확인
             $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$username, $email]);
             if ($stmt->fetch()) {
                 $error = '이미 사용 중인 사용자명 또는 이메일입니다.';
             } else {
-                // 비밀번호 해시화 후 저장
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
@@ -51,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['username'] = $username;
 
-                // 메인 페이지로 이동
                 header('Location: index.php');
                 exit;
             }
@@ -60,80 +56,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = '회원가입 - ' . SITE_NAME;
+require_once 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="ko">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입 - <?php echo SITE_NAME; ?></title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<h1 class="page-title">회원가입</h1>
 
-<body>
-    <header>
-        <div class="container">
-            <a href="index.php" class="logo"><?php echo SITE_NAME; ?></a>
-            <nav>
-                <ul>
-                    <li><a href="index.php">홈</a></li>
-                    <li><a href="login.php">로그인</a></li>
-                    <li><a href="register.php">회원가입</a></li>
-                </ul>
-            </nav>
+<?php if ($error): ?>
+    <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
+<?php endif; ?>
+
+<div class="card">
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="username">사용자명 *</label>
+            <input type="text" id="username" name="username" class="form-control" placeholder="사용자명을 입력하세요" required
+                value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
         </div>
-    </header>
 
-    <main>
-        <div class="container">
-            <h1 class="page-title">📝 회원가입</h1>
-
-            <?php if ($error): ?>
-                <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
-            <?php endif; ?>
-
-
-
-            <div class="card">
-                <form method="POST" action="">
-                    <div class="form-group">
-                        <label for="username">사용자명 *</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="사용자명을 입력하세요"
-                            required value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">이메일 *</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="이메일을 입력하세요"
-                            required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">비밀번호 *</label>
-                        <input type="password" id="password" name="password" class="form-control"
-                            placeholder="비밀번호를 입력하세요" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password_confirm">비밀번호 확인 *</label>
-                        <input type="password" id="password_confirm" name="password_confirm" class="form-control"
-                            placeholder="비밀번호를 다시 입력하세요" required>
-                    </div>
-
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-primary">회원가입</button>
-                    </div>
-                </form>
-            </div>
+        <div class="form-group">
+            <label for="email">이메일 *</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="이메일을 입력하세요" required
+                value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
         </div>
-    </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 <?php echo SITE_NAME; ?>. All rights reserved.</p>
+        <div class="form-group">
+            <label for="password">비밀번호 *</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호를 입력하세요"
+                required>
         </div>
-    </footer>
-</body>
 
-</html>
+        <div class="form-group">
+            <label for="password_confirm">비밀번호 확인 *</label>
+            <input type="password" id="password_confirm" name="password_confirm" class="form-control"
+                placeholder="비밀번호를 다시 입력하세요" required>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">회원가입</button>
+        </div>
+    </form>
+</div>
+
+<?php require_once 'includes/footer.php'; ?>

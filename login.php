@@ -23,13 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $pdo = getDBConnection();
 
-            // 사용자 조회
             $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE username = ?");
             $stmt->execute([$username]);
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                // 로그인 성공
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
 
@@ -43,67 +41,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = '로그인 - ' . SITE_NAME;
+require_once 'includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="ko">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인 - <?php echo SITE_NAME; ?></title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<h1 class="page-title">로그인</h1>
 
-<body>
-    <header>
-        <div class="container">
-            <a href="index.php" class="logo"><?php echo SITE_NAME; ?></a>
-            <nav>
-                <ul>
-                    <li><a href="index.php">홈</a></li>
-                    <li><a href="login.php">로그인</a></li>
-                    <li><a href="register.php">회원가입</a></li>
-                </ul>
-            </nav>
+<?php if ($error): ?>
+    <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
+<?php endif; ?>
+
+<div class="card">
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="username">사용자명</label>
+            <input type="text" id="username" name="username" class="form-control" placeholder="사용자명을 입력하세요" required
+                value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
         </div>
-    </header>
 
-    <main>
-        <div class="container">
-            <h1 class="page-title">🔐 로그인</h1>
-
-            <?php if ($error): ?>
-                <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
-            <?php endif; ?>
-
-            <div class="card">
-                <form method="POST" action="">
-                    <div class="form-group">
-                        <label for="username">사용자명</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="사용자명을 입력하세요"
-                            required value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">비밀번호</label>
-                        <input type="password" id="password" name="password" class="form-control"
-                            placeholder="비밀번호를 입력하세요" required>
-                    </div>
-
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-primary">로그인</button>
-                        <a href="register.php" class="btn btn-secondary">회원가입</a>
-                    </div>
-                </form>
-            </div>
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호를 입력하세요"
+                required>
         </div>
-    </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 <?php echo SITE_NAME; ?>. All rights reserved.</p>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">로그인</button>
+            <a href="register.php" class="btn btn-secondary">회원가입</a>
         </div>
-    </footer>
-</body>
+    </form>
+</div>
 
-</html>
+<?php require_once 'includes/footer.php'; ?>
