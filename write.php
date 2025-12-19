@@ -21,11 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $pdo = getDBConnection();
 
-            // 게시글 저장 (user_id는 NULL로 저장)
+            // 게시글 저장 (로그인 시 user_id 저장, 비로그인 시 NULL)
+            $user_id = $_SESSION['user_id'] ?? null;
             $sql = "INSERT INTO posts (user_id, title, content, code_content, programming_language) 
-                    VALUES (NULL, ?, ?, ?, ?)";
+                    VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$title, $content, $code_content, $programming_language]);
+            $stmt->execute([$user_id, $title, $content, $code_content, $programming_language]);
 
             // 세션에 게시글 소유권 저장
             $post_id = $pdo->lastInsertId();
@@ -68,10 +69,8 @@ $languages = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>새 글 작성 - <?php echo SITE_NAME; ?></title>
+    <title>글 작성 - <?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
 </head>
 
 <body>
@@ -81,9 +80,9 @@ $languages = [
             <nav>
                 <ul>
                     <li><a href="index.php">홈</a></li>
-                    <li><a href="write.php">새 글 작성</a></li>
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <li><span style="color: var(--primary-color);">👤
+                        <li><a href="write.php">글 작성</a></li>
+                        <li><span style="color: #000; font-weight: 600;">👤
                                 <?php echo htmlspecialchars($_SESSION['username']); ?></span></li>
                         <li><a href="logout.php">로그아웃</a></li>
                     <?php else: ?>
@@ -97,7 +96,7 @@ $languages = [
 
     <main>
         <div class="container">
-            <h1 class="page-title">✏️ 새 글 작성</h1>
+            <h1 class="page-title">✏️ 글 작성</h1>
 
             <?php if ($error): ?>
                 <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
@@ -133,12 +132,12 @@ $languages = [
                     <div class="form-group">
                         <label for="code_content">코드 (선택사항)</label>
                         <textarea id="code_content" name="code_content" class="form-control"
-                            style="font-family: 'Consolas', monospace; min-height: 200px;"
+                            style="font-family: 'IntelOneMonoItalic', 'Consolas', monospace; min-height: 200px;"
                             placeholder="리뷰 받고 싶은 코드를 붙여넣으세요"><?php echo htmlspecialchars($_POST['code_content'] ?? ''); ?></textarea>
                     </div>
 
                     <div class="btn-group">
-                        <button type="submit" class="btn btn-primary">📤 게시글 등록</button>
+                        <button type="submit" class="btn btn-primary">등록</button>
                         <a href="index.php" class="btn btn-secondary">취소</a>
                     </div>
                 </form>

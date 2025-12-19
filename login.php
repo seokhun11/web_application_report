@@ -52,8 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인 - <?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
 </head>
 
 <body>
@@ -93,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="btn-group">
-                        <button type="submit" class="btn btn-primary">🔓 로그인</button>
-                        <a href="register.php" class="btn btn-secondary">회원가입하러 가기</a>
+                        <button type="submit" class="btn btn-primary">로그인</button>
+                        <a href="register.php" class="btn btn-secondary">회원가입</a>
                     </div>
                 </form>
             </div>

@@ -46,10 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_submit'])) {
     $comment_content = trim($_POST['comment_content'] ?? '');
 
     if (!empty($comment_content)) {
-        // 댓글 저장 (user_id는 NULL로 저장)
-        $sql = "INSERT INTO comments (post_id, user_id, content) VALUES (?, NULL, ?)";
+        // 댓글 저장 (로그인 시 user_id 저장, 비로그인 시 NULL)
+        $user_id = $_SESSION['user_id'] ?? null;
+        $sql = "INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$id, $comment_content]);
+        $stmt->execute([$id, $user_id, $comment_content]);
 
         header("Location: view.php?id=$id#comments");
         exit;
@@ -67,8 +68,6 @@ $isOwner = isset($_SESSION['my_posts']) && in_array($id, $_SESSION['my_posts']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($post['title']); ?> - <?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
 </head>
 
 <body>
@@ -78,9 +77,9 @@ $isOwner = isset($_SESSION['my_posts']) && in_array($id, $_SESSION['my_posts']);
             <nav>
                 <ul>
                     <li><a href="index.php">홈</a></li>
-                    <li><a href="write.php">새 글 작성</a></li>
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <li><span style="color: var(--primary-color);">👤
+                        <li><a href="write.php">글 작성</a></li>
+                        <li><span style="color: #000; font-weight: 600;">👤
                                 <?php echo htmlspecialchars($_SESSION['username']); ?></span></li>
                         <li><a href="logout.php">로그아웃</a></li>
                     <?php else: ?>
@@ -113,7 +112,7 @@ $isOwner = isset($_SESSION['my_posts']) && in_array($id, $_SESSION['my_posts']);
                 </div>
 
                 <?php if (!empty($post['code_content'])): ?>
-                    <h3 style="margin-bottom: 15px; color: var(--primary-color);">📋 코드</h3>
+                    <h3 style="margin-bottom: 15px; color: var(--primary-color);">코드</h3>
                     <div class="code-block">
                         <pre><code><?php echo htmlspecialchars($post['code_content']); ?></code></pre>
                     </div>
@@ -121,11 +120,11 @@ $isOwner = isset($_SESSION['my_posts']) && in_array($id, $_SESSION['my_posts']);
 
                 <div class="btn-group">
                     <?php if ($isOwner): ?>
-                        <a href="edit.php?id=<?php echo $post['id']; ?>" class="btn btn-primary">✏️ 수정</a>
+                        <a href="edit.php?id=<?php echo $post['id']; ?>" class="btn btn-primary">수정</a>
                         <a href="delete.php?id=<?php echo $post['id']; ?>" class="btn btn-danger"
-                            onclick="return confirm('정말 삭제하시겠습니까?');">🗑️ 삭제</a>
+                            onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
                     <?php endif; ?>
-                    <a href="index.php" class="btn btn-secondary">← 목록으로</a>
+                    <a href="index.php" class="btn btn-secondary">목록으로</a>
                 </div>
             </div>
 
@@ -156,7 +155,7 @@ $isOwner = isset($_SESSION['my_posts']) && in_array($id, $_SESSION['my_posts']);
 
                 <!-- 댓글 작성 폼 -->
                 <div class="card" style="margin-top: 30px;">
-                    <h4 style="margin-bottom: 20px;">✍️ 리뷰 작성</h4>
+                    <h4 style="margin-bottom: 20px;">리뷰 작성</h4>
                     <form method="POST" action="">
                         <div class="form-group">
                             <label for="comment_content">내용</label>
@@ -164,7 +163,7 @@ $isOwner = isset($_SESSION['my_posts']) && in_array($id, $_SESSION['my_posts']);
                                 placeholder="코드 리뷰 또는 의견을 작성하세요" required></textarea>
                         </div>
                         <button type="submit" name="comment_submit" class="btn btn-success">
-                            💬 댓글 등록
+                            등록
                         </button>
                     </form>
                 </div>

@@ -86,8 +86,6 @@ $languages = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 수정 - <?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
 </head>
 
 <body>
@@ -97,9 +95,9 @@ $languages = [
             <nav>
                 <ul>
                     <li><a href="index.php">홈</a></li>
-                    <li><a href="write.php">새 글 작성</a></li>
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <li><span style="color: var(--primary-color);">👤
+                        <li><a href="write.php">글 작성</a></li>
+                        <li><span style="color: #000; font-weight: 600;">👤
                                 <?php echo htmlspecialchars($_SESSION['username']); ?></span></li>
                         <li><a href="logout.php">로그아웃</a></li>
                     <?php else: ?>
@@ -150,7 +148,7 @@ $languages = [
                     <div class="form-group">
                         <label for="code_content">코드 (선택사항)</label>
                         <textarea id="code_content" name="code_content" class="form-control"
-                            style="font-family: 'Consolas', monospace; min-height: 200px;"
+                            style="font-family: 'IntelOneMonoItalic', 'Consolas', monospace; min-height: 200px;"
                             placeholder="리뷰 받고 싶은 코드를 붙여넣으세요"><?php echo htmlspecialchars($_POST['code_content'] ?? $post['code_content']); ?></textarea>
                     </div>
 

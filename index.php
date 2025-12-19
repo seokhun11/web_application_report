@@ -23,8 +23,6 @@ $posts = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITE_NAME; ?> - 홈</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
 </head>
 
 <body>
@@ -35,8 +33,8 @@ $posts = $stmt->fetchAll();
                 <ul>
                     <li><a href="index.php">홈</a></li>
                     <?php if (isset($_SESSION['user_id'])): ?>
-                        <li><a href="write.php">새 글 작성</a></li>
-                        <li><span style="color: var(--primary-color);">👤
+                        <li><a href="write.php">글 작성</a></li>
+                        <li><span style="color: #000; font-weight: 600;">👤
                                 <?php echo htmlspecialchars($_SESSION['username']); ?></span></li>
                         <li><a href="logout.php">로그아웃</a></li>
                     <?php else: ?>
@@ -50,7 +48,7 @@ $posts = $stmt->fetchAll();
 
     <main>
         <div class="container">
-            <h1 class="page-title">📝 코드 리뷰 게시판</h1>
+            <h1 class="page-title">코드 리뷰 게시판</h1>
 
             <?php if (isset($_GET['msg'])): ?>
                 <div class="alert alert-success">
@@ -95,9 +93,11 @@ $posts = $stmt->fetchAll();
                 <?php endif; ?>
             </div>
 
-            <div class="btn-group" style="margin-top: 30px;">
-                <a href="write.php" class="btn btn-primary">✏️ 새 글 작성하기</a>
-            </div>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <div class="btn-group" style="margin-top: 30px;">
+                    <a href="write.php" class="btn btn-primary">글 작성</a>
+                </div>
+            <?php endif; ?>
         </div>
     </main>
 

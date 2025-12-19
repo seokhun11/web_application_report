@@ -2,6 +2,22 @@
    코드 리뷰 커뮤니티 스타일시트
    ============================================ */
 
+/* Cafe24ProSlim 폰트 */
+@font-face {
+    font-family: 'Cafe24ProSlim';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2511-1@1.0/Cafe24PROSlim-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-display: swap;
+}
+
+/* IntelOneMonoItalic 폰트 (코드용) */
+@font-face {
+    font-family: 'IntelOneMonoItalic';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-lightitalic.woff2') format('woff2');
+    font-weight: 300;
+    font-display: swap;
+}
+
 /* CSS 변수 정의 */
 :root {
     --primary-color: #6366f1;
@@ -30,7 +46,7 @@
 }
 
 body {
-    font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+    font-family: 'Cafe24ProSlim', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
     color: var(--text-primary);
     min-height: 100vh;
@@ -90,10 +106,6 @@ nav a {
     font-weight: 500;
 }
 
-nav a:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
 
 /* 메인 컨텐츠 */
 main {
@@ -112,7 +124,6 @@ main {
 }
 
 .card:hover {
-    transform: translateY(-5px);
     box-shadow: 0 8px 30px rgba(99, 102, 241, 0.2);
     border-color: var(--primary-color);
 }
@@ -172,6 +183,7 @@ main {
     border-radius: var(--radius);
     font-size: 1rem;
     font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
     text-decoration: none;
     text-align: center;
@@ -183,19 +195,9 @@ main {
     color: white;
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
-}
-
 .btn-success {
     background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
     color: white;
-}
-
-.btn-success:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
 }
 
 .btn-danger {
@@ -203,18 +205,9 @@ main {
     color: white;
 }
 
-.btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(239, 68, 68, 0.4);
-}
-
 .btn-secondary {
     background: var(--border-color);
     color: var(--text-primary);
-}
-
-.btn-secondary:hover {
-    background: var(--text-secondary);
 }
 
 /* 폼 스타일 */
@@ -237,6 +230,7 @@ main {
     background: var(--darker-bg);
     color: var(--text-primary);
     font-size: 1rem;
+    font-family: inherit;
     transition: var(--transition);
 }
 
@@ -263,7 +257,7 @@ select.form-control {
     border-radius: var(--radius);
     padding: 20px;
     overflow-x: auto;
-    font-family: 'Consolas', 'Monaco', monospace;
+    font-family: 'IntelOneMonoItalic', 'Consolas', 'Monaco', monospace;
     font-size: 0.9rem;
     line-height: 1.5;
     margin: 15px 0;
@@ -273,6 +267,11 @@ select.form-control {
     margin: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
+    font-family: inherit;
+}
+
+.code-block code {
+    font-family: inherit;
 }
 
 /* 댓글 섹션 */
@@ -367,20 +366,20 @@ footer {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     nav ul {
         flex-wrap: wrap;
         justify-content: center;
     }
-    
+
     .page-title {
         font-size: 1.5rem;
     }
-    
+
     .btn-group {
         flex-direction: column;
     }
-    
+
     .post-meta {
         flex-wrap: wrap;
     }
@@ -392,6 +391,7 @@ footer {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
